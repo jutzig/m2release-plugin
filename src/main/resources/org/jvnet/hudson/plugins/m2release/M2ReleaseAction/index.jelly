@@ -16,9 +16,9 @@
 						<f:textbox name="developmentVersion" value="${it.computeNextVersion()}" />
 					</f:entry>
 					<f:entry title="Dry run only?">
-                        <f:checkbox name="isDryRun" checked="false"/>
-                    </f:entry>
-					
+						<f:checkbox name="isDryRun" checked="false"/>
+					</f:entry>
+
 					<f:optionalBlock name="specifyScmCredentials" title="Specify SCM login/password" checked="${it.isSelectScmCredentials()}">
 						<f:entry title="Username">
 							<f:textbox name="scmUsername" value="" />
@@ -27,7 +27,7 @@
 							<f:password name="scmPassword" value="" />
 						</f:entry>
 					</f:optionalBlock>
-					
+
 					<f:optionalBlock name="specifyScmCommentPrefix" title="Specify custom SCM comment prefix" checked="${it.selectCustomScmCommentPrefix}" help="/plugin/m2release/help-actionRelease-specifyCustomScmCommentPrefix.html">
 						<f:entry title="Comment Prefix">
 							<f:textbox name="scmCommentPrefix" value="[maven-release-plugin]" />
@@ -43,6 +43,12 @@
 						</f:entry>
 					</f:optionalBlock>
 
+					<f:optionalBlock name="submoduleRelease" title="Release Specific Submodules" checked="${it.selectSubmoduleRelease}" help="/plugin/m2release/help-actionRelease-specifySubmodule.html">
+						<f:entry title="Submodules">
+							<f:textbox name="submodules" value="" />
+						</f:entry>
+					</f:optionalBlock>
+
 					<j:if test="${it.nexusSupportEnabled}">
 						<f:section title="Nexus Pro Support">
 							<f:optionalBlock name="closeNexusStage" title="Close Nexus Staging Repository" checked="true">
@@ -55,19 +61,19 @@
 				</f:section>
 
 				<j:if test="${!empty(it.parameterDefinitions)}">
-				   <f:section title="${%Job properties}">
-			          <j:forEach var="parameterDefinition" items="${it.parameterDefinitions}">
-			            <tbody>
-			               <st:include it="${parameterDefinition}" page="${parameterDefinition.descriptor.valuePage}" />
-				        </tbody>
-				      </j:forEach>
-				   </f:section>
-				</j:if>	
-				
+				<f:section title="${%Job properties}">
+					  <j:forEach var="parameterDefinition" items="${it.parameterDefinitions}">
+						<tbody>
+						   <st:include it="${parameterDefinition}" page="${parameterDefinition.descriptor.valuePage}" />
+						</tbody>
+					  </j:forEach>
+				</f:section>
+				</j:if>
+
 				<tr><td colspan="4" align="right">
 				<f:submit value="${%Schedule Maven Release Build}"/>
 				</td></tr>
-				
+
 			</f:form>
 
 
