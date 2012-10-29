@@ -19,12 +19,18 @@
 	<url>http://wiki.jenkins-ci.org/display/JENKINS/M2+Release+Plugin</url>
 
 	<properties>
-		<revision>0.16.5</revision>
+		<revision>0.16.5.SEE1</revision>
 		<changelist>-SNAPSHOT</changelist>
 		<!-- https://www.jenkins.io/doc/developer/plugin-development/choosing-jenkins-baseline/ -->
 		<jenkins.baseline>2.414</jenkins.baseline>
 		<jenkins.version>${jenkins.baseline}.3</jenkins.version>
-		<gitHubRepo>jenkinsci/${project.artifactId}-plugin</gitHubRepo>
+		<gitHubRepo>jutzig/${project.artifactId}-plugin</gitHubRepo>
+
+		<!-- adjust for fork -->
+		<repo.id.release>seeburger</repo.id.release>
+		<repo.id.snapshot>seeburger</repo.id.snapshot>
+		<repo.url.release>http://repo.dev.seeburger.de/repository/release</repo.url.release>
+		<repo.url.snapshot>http://repo.dev.seeburger.de/repository/snapshot</repo.url.snapshot>
 	</properties>
 
 	<developers>
@@ -269,5 +275,16 @@
 		<url>https://repo.jenkins-ci.org/public/</url>
 		</pluginRepository>
 	</pluginRepositories>
+
+	<distributionManagement>
+		<repository>
+			<id>${repo.id.release}</id>
+			<url>${repo.url.release}</url>
+		</repository>
+		<snapshotRepository>
+			<id>${repo.id.release}</id>
+			<url>${repo.url.snapshot}</url>
+		</snapshotRepository>
+	</distributionManagement>
 
 </project>
