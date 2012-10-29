@@ -1,18 +1,18 @@
 /*
  * The MIT License
- * 
+ *
  * Copyright (c) 2009, NDS Group Ltd., James Nord, CloudBees, Inc.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -23,17 +23,6 @@
  */
 package org.jvnet.hudson.plugins.m2release;
 
-import hudson.maven.MavenModule;
-import hudson.maven.MavenModuleSet;
-import hudson.model.ParameterValue;
-import hudson.model.BooleanParameterValue;
-import hudson.model.ParameterDefinition;
-import hudson.model.ParametersAction;
-import hudson.model.ParametersDefinitionProperty;
-import hudson.model.PasswordParameterValue;
-import hudson.model.PermalinkProjectAction;
-import hudson.model.StringParameterValue;
-import jenkins.model.Jenkins;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -46,9 +35,6 @@ import java.util.logging.Logger;
 
 import jakarta.servlet.ServletException;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
 import org.apache.commons.fileupload.FileItem;
 import org.apache.maven.shared.release.versions.DefaultVersionInfo;
 import org.apache.maven.shared.release.versions.VersionParseException;
@@ -56,15 +42,30 @@ import org.kohsuke.stapler.StaplerRequest2;
 import org.kohsuke.stapler.StaplerResponse2;
 import org.kohsuke.stapler.interceptor.RequirePOST;
 
+import hudson.maven.MavenModule;
+import hudson.maven.MavenModuleSet;
+import hudson.model.BooleanParameterValue;
+import hudson.model.Describable;
+import hudson.model.ParameterDefinition;
+import hudson.model.ParameterValue;
+import hudson.model.ParametersAction;
+import hudson.model.ParametersDefinitionProperty;
+import hudson.model.PasswordParameterValue;
+import hudson.model.PermalinkProjectAction;
+import hudson.model.StringParameterValue;
+import jenkins.model.Jenkins;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
 /**
  * The action appears as the link in the side bar that users will click on in
  * order to start the release process.
- * 
+ *
  * @author James Nord
  * @author Dominik Bartholdi
  * @version 0.3
  */
-public class M2ReleaseAction implements PermalinkProjectAction {
+public class M2ReleaseAction implements PermalinkProjectAction, Describable<M2ReleaseAction> {
 
 	private MavenModuleSet project;
 	private boolean selectCustomScmCommentPrefix;
@@ -113,7 +114,7 @@ public class M2ReleaseAction implements PermalinkProjectAction {
 		return null;
 	}
 
-	
+
 	@Override
 	public String getUrlName() {
 		return "m2release"; //$NON-NLS-1$
@@ -230,6 +231,7 @@ public class M2ReleaseAction implements PermalinkProjectAction {
 		final String scmCommentPrefix = specifyScmCommentPrefix ? requestWrapper.getString("scmCommentPrefix") : null; //$NON-NLS-1$
 		final boolean specifyScmTag = requestWrapper.containsKey("specifyScmTag"); //$NON-NLS-1$
 		final String scmTag = specifyScmTag ? requestWrapper.getString("scmTag") : null; //$NON-NLS-1$
+		final String submodule = requestWrapper.containsKey("submodule") ? requestWrapper.getString("submodule") : null; //$NON-NLS-1$
 
 		final boolean appendHusonUserName = specifyScmCommentPrefix && requestWrapper.containsKey("appendHudsonUserName"); //$NON-NLS-1$
 		final boolean isDryRun = requestWrapper.containsKey("isDryRun"); //$NON-NLS-1$
@@ -293,11 +295,12 @@ public class M2ReleaseAction implements PermalinkProjectAction {
 		arguments.setScmUsername(scmUsername);
 		arguments.setScmPassword(scmPassword);
 		arguments.setScmTagName(scmTag);
+		arguments.setSubmodules(submodule);
 		arguments.setScmCommentPrefix(scmCommentPrefix);
 		arguments.setAppendHusonUserName(appendHusonUserName);
 arguments.setHudsonUserName(Jenkins.getAuthentication2().getName());
 
-		
+
 		if (project.scheduleBuild(0, new ReleaseCause(), parameters, arguments)) {
 			resp.sendRedirect(req.getContextPath() + '/' + project.getUrl());
 		} else {
@@ -408,7 +411,7 @@ arguments.setHudsonUserName(Jenkins.getAuthentication2().getName());
 	/**
 	 * Enforces that the developer version is actually a developer version and
 	 * ends with "-SNAPSHOT".
-	 * 
+	 *
 	 * @throws IllegalArgumentException
 	 *             if the version does not end with "-SNAPSHOT"
 	 */
@@ -422,4 +425,11 @@ arguments.setHudsonUserName(Jenkins.getAuthentication2().getName());
 	private static final List<Permalink> PERMALINKS = Collections.singletonList(LastReleasePermalink.INSTANCE);
 
 	private static final Logger LOGGER = Logger.getLogger(M2ReleaseAction.class.getName());
+
+	@Override
+	public M2ReleaseActionDescriptor getDescriptor()
+	{
+		return (M2ReleaseActionDescriptor)Jenkins.get().getDescriptorOrDie(getClass());
+	}
+
 }

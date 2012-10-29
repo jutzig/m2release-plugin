@@ -9,16 +9,20 @@
 		<l:main-panel>
 			<f:form method="post" action="submit">
 				<f:section title="Perform Maven Release">
+					<j:set var="descriptor" value="${it.descriptor}" />
+					<f:entry title="Submodule to release" help="/plugin/m2release/help-actionRelease-specifySubmodule.html">
+						<f:textbox name="submodule" placeholder="&lt;groupId&gt;:&lt;artifactId&gt;" field="submodule" />
+					</f:entry>
 					<f:entry title="Release Version">
-						<f:textbox name="releaseVersion" value="${it.computeReleaseVersion()}" />
+						<f:combobox name="releaseVersion" value="${it.computeReleaseVersion()}" field="releaseVersion" />
 					</f:entry>
 					<f:entry title="Development version">
-						<f:textbox name="developmentVersion" value="${it.computeNextVersion()}" />
+						<f:combobox name="developmentVersion" value="${it.computeNextVersion()}" field="developmentVersion" />
 					</f:entry>
 					<f:entry title="Dry run only?">
-                        <f:checkbox name="isDryRun" checked="false"/>
-                    </f:entry>
-					
+						<f:checkbox name="isDryRun" checked="false"/>
+					</f:entry>
+
 					<f:optionalBlock name="specifyScmCredentials" title="Specify SCM login/password" checked="${it.isSelectScmCredentials()}">
 						<f:entry title="Username">
 							<f:textbox name="scmUsername" value="" />
@@ -27,7 +31,7 @@
 							<f:password name="scmPassword" value="" />
 						</f:entry>
 					</f:optionalBlock>
-					
+
 					<f:optionalBlock name="specifyScmCommentPrefix" title="Specify custom SCM comment prefix" checked="${it.selectCustomScmCommentPrefix}" help="/plugin/m2release/help-actionRelease-specifyCustomScmCommentPrefix.html">
 						<f:entry title="Comment Prefix">
 							<f:textbox name="scmCommentPrefix" value="[maven-release-plugin]" />
@@ -63,12 +67,12 @@
 				        </tbody>
 				      </j:forEach>
 				   </f:section>
-				</j:if>	
+				</j:if>
 				
 				<tr><td colspan="4" align="right">
 				<f:submit value="${%Schedule Maven Release Build}"/>
 				</td></tr>
-				
+
 			</f:form>
 
 
