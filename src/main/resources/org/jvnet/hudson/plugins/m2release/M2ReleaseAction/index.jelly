@@ -9,11 +9,15 @@
 		<l:main-panel>
 			<f:form method="post" action="submit">
 				<f:section title="Perform Maven Release">
+					<j:set var="descriptor" value="${it.descriptor}" />
+					<f:entry title="Submodule to release" help="/plugin/m2release/help-actionRelease-specifySubmodule.html">
+						<f:textbox name="submodule" placeholder="&lt;groupId&gt;:&lt;artifactId&gt;" field="submodule" />
+					</f:entry>
 					<f:entry title="Release Version">
-						<f:textbox name="releaseVersion" value="${it.computeReleaseVersion()}" />
+						<f:combobox name="releaseVersion" value="${it.computeReleaseVersion()}" field="releaseVersion" />
 					</f:entry>
 					<f:entry title="Development version">
-						<f:textbox name="developmentVersion" value="${it.computeNextVersion()}" />
+						<f:combobox name="developmentVersion" value="${it.computeNextVersion()}" field="developmentVersion" />
 					</f:entry>
 					<f:entry title="Dry run only?">
 						<f:checkbox name="isDryRun" checked="false"/>
@@ -40,12 +44,6 @@
 					<f:optionalBlock name="specifyScmTag" title="Specify custom SCM tag" checked="${it.selectCustomScmTag}" help="/plugin/m2release/help-actionRelease-specifyCustomScmTag.html">
 						<f:entry title="SCM tag">
 							<f:textbox name="scmTag" value="${it.computeScmTag()}" />
-						</f:entry>
-					</f:optionalBlock>
-
-					<f:optionalBlock name="submoduleRelease" title="Release Specific Submodules" checked="${it.selectSubmoduleRelease}" help="/plugin/m2release/help-actionRelease-specifySubmodule.html">
-						<f:entry title="Submodules">
-							<f:textbox name="submodules" value="" />
 						</f:entry>
 					</f:optionalBlock>
 

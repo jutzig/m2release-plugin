@@ -27,10 +27,10 @@
 		<gitHubRepo>jutzig/${project.artifactId}-plugin</gitHubRepo>
 
 		<!-- adjust for fork -->
-		<repo.id.release>seeburger</repo.id.release>
-		<repo.id.snapshot>seeburger</repo.id.snapshot>
-		<repo.url.release>http://repo.dev.seeburger.de/repository/release</repo.url.release>
-		<repo.url.snapshot>http://repo.dev.seeburger.de/repository/snapshot</repo.url.snapshot>
+		<repo.id.release>release</repo.id.release>
+		<repo.id.snapshot>snapshot</repo.id.snapshot>
+		<repo.url.release>http://repo.seeburger.de/repository/release/</repo.url.release>
+		<repo.url.snapshot>http://repo.seeburger.de/repository/snapshot/</repo.url.snapshot>
 	</properties>
 
 	<developers>
@@ -73,8 +73,8 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-	
-	
+
+
 	<dependencies>
 		<dependency>
 			<groupId>org.jenkins-ci.main</groupId>
@@ -115,7 +115,7 @@
 				      and o.a.m.shared.release.versions.VersionParseException
 				-->
 				<!--  requires maven a newer version of Maven than is on the CI server :( -->
-				<!-- 
+				<!--
 				<exclusions>
 					<exclusion>
 						<groupId>*</groupId>
