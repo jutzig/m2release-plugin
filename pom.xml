@@ -25,10 +25,10 @@
 		<gitHubRepo>jenkinsci/${project.artifactId}-plugin</gitHubRepo>
 
 		<!-- adjust for fork -->
-		<repo.id.release>seeburger</repo.id.release>
-		<repo.id.snapshot>seeburger</repo.id.snapshot>
-		<repo.url.release>http://repo.dev.seeburger.de/repository/release</repo.url.release>
-		<repo.url.snapshot>http://repo.dev.seeburger.de/repository/snapshot</repo.url.snapshot>
+		<repo.id.release>release</repo.id.release>
+		<repo.id.snapshot>snapshot</repo.id.snapshot>
+		<repo.url.release>http://repo.seeburger.de/repository/release/</repo.url.release>
+		<repo.url.snapshot>http://repo.seeburger.de/repository/snapshot/</repo.url.snapshot>
 	</properties>
 
 	<developers>
@@ -47,7 +47,7 @@
 	</developers>
 
 	<scm>
-		<connection>scm:git:git://github.com/jutzig/m2release-plugin.git</connection>
+		<connection>scm:git:git@github.com:jutzig/m2release-plugin.git</connection>
 		<developerConnection>scm:git:git@github.com:jutzig/m2release-plugin.git</developerConnection>
 		<url>https://github.com/jutzig/m2release-plugin/</url>
 	</scm>

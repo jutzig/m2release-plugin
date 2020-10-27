@@ -1,18 +1,18 @@
 /*
  * The MIT License
- * 
+ *
  * Copyright (c) 2012, James Nord
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -31,7 +31,7 @@ import java.util.TreeMap;
 
 /**
  * Action attached to the build that will record what we should do.
- * 
+ *
  * @author teilo
  */
 public class M2ReleaseArgumentsAction implements Action {
@@ -59,7 +59,7 @@ public class M2ReleaseArgumentsAction implements Action {
 	private transient String scmPassword;
 	private transient String scmCommentPrefix;
 	private String scmTagName;
-	private String submodules;
+	private String submodule;
 
 	private transient boolean appendHusonUserName;
 	private transient String hudsonUserName;
@@ -190,12 +190,12 @@ public class M2ReleaseArgumentsAction implements Action {
 		this.hudsonUserName = hudsonUserName;
 	}
 
-	public String getSubmodules() {
-		return submodules;
+	public String getSubmodule() {
+		return submodule;
 	}
 
-	public void setSubmodules(String submodules) {
-		this.submodules = submodules;
+	public void setSubmodules(String submodule) {
+		this.submodule = submodule;
 	}
 
 }
