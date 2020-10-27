@@ -23,17 +23,6 @@
  */
 package org.jvnet.hudson.plugins.m2release;
 
-import hudson.maven.MavenModule;
-import hudson.maven.MavenModuleSet;
-import hudson.model.ParameterValue;
-import hudson.model.BooleanParameterValue;
-import hudson.model.ParameterDefinition;
-import hudson.model.ParametersAction;
-import hudson.model.ParametersDefinitionProperty;
-import hudson.model.PasswordParameterValue;
-import hudson.model.PermalinkProjectAction;
-import hudson.model.StringParameterValue;
-import jenkins.model.Jenkins;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -46,9 +35,6 @@ import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.lang.StringUtils;
 import org.apache.maven.shared.release.versions.DefaultVersionInfo;
@@ -56,6 +42,21 @@ import org.apache.maven.shared.release.versions.VersionParseException;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 import org.kohsuke.stapler.interceptor.RequirePOST;
+
+import hudson.maven.MavenModule;
+import hudson.maven.MavenModuleSet;
+import hudson.model.BooleanParameterValue;
+import hudson.model.Describable;
+import hudson.model.ParameterDefinition;
+import hudson.model.ParameterValue;
+import hudson.model.ParametersAction;
+import hudson.model.ParametersDefinitionProperty;
+import hudson.model.PasswordParameterValue;
+import hudson.model.PermalinkProjectAction;
+import hudson.model.StringParameterValue;
+import jenkins.model.Jenkins;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 /**
  * The action appears as the link in the side bar that users will click on in
@@ -65,21 +66,19 @@ import org.kohsuke.stapler.interceptor.RequirePOST;
  * @author Dominik Bartholdi
  * @version 0.3
  */
-public class M2ReleaseAction implements PermalinkProjectAction {
+public class M2ReleaseAction implements PermalinkProjectAction, Describable<M2ReleaseAction> {
 
 	private MavenModuleSet project;
 	private boolean selectCustomScmCommentPrefix;
 	private boolean selectCustomScmTag = false;
 	private boolean selectAppendHudsonUsername;
 	private boolean selectScmCredentials;
-	private boolean selectSubmoduleRelease;
 
-	public M2ReleaseAction(MavenModuleSet project, boolean selectCustomScmCommentPrefix, boolean selectAppendHudsonUsername, boolean selectScmCredentials, boolean selectSubmoduleRelease) {
+	public M2ReleaseAction(MavenModuleSet project, boolean selectCustomScmCommentPrefix, boolean selectAppendHudsonUsername, boolean selectScmCredentials) {
 		this.project = project;
 		this.selectCustomScmCommentPrefix = selectCustomScmCommentPrefix;
 		this.selectAppendHudsonUsername = selectAppendHudsonUsername;
 		this.selectScmCredentials = selectScmCredentials;
-		this.selectSubmoduleRelease = selectSubmoduleRelease;
 		if (getRootModule() == null) {
 			// if the root module is not available, the user should be informed
 			// about the stuff we are not able to compute
@@ -143,14 +142,6 @@ public class M2ReleaseAction implements PermalinkProjectAction {
 
 	public void setSelectAppendHudsonUsername(boolean selectAppendHudsonUsername) {
 		this.selectAppendHudsonUsername = selectAppendHudsonUsername;
-	}
-
-	public boolean isSelectSubmoduleRelease() {
-		return selectSubmoduleRelease;
-	}
-
-	public void setSelectSubmoduleRelease(boolean selectSubmoduleRelease) {
-		this.selectSubmoduleRelease = selectSubmoduleRelease;
 	}
 
 	public boolean isSelectCustomScmTag() {
@@ -241,8 +232,7 @@ public class M2ReleaseAction implements PermalinkProjectAction {
 		final String scmCommentPrefix = specifyScmCommentPrefix ? requestWrapper.getString("scmCommentPrefix") : null; //$NON-NLS-1$
 		final boolean specifyScmTag = requestWrapper.containsKey("specifyScmTag"); //$NON-NLS-1$
 		final String scmTag = specifyScmTag ? requestWrapper.getString("scmTag") : null; //$NON-NLS-1$
-		final boolean submoduleRelease = requestWrapper.containsKey("submoduleRelease"); //$NON-NLS-1$
-		final String submodules = submoduleRelease ? requestWrapper.getString("submodules") : null; //$NON-NLS-1$
+		final String submodule = requestWrapper.containsKey("submodule") ? requestWrapper.getString("submodule") : null; //$NON-NLS-1$
 
 		final boolean appendHusonUserName = specifyScmCommentPrefix && requestWrapper.containsKey("appendHudsonUserName"); //$NON-NLS-1$
 		final boolean isDryRun = requestWrapper.containsKey("isDryRun"); //$NON-NLS-1$
@@ -306,7 +296,7 @@ public class M2ReleaseAction implements PermalinkProjectAction {
 		arguments.setScmUsername(scmUsername);
 		arguments.setScmPassword(scmPassword);
 		arguments.setScmTagName(scmTag);
-		arguments.setSubmodules(submodules);
+		arguments.setSubmodules(submodule);
 		arguments.setScmCommentPrefix(scmCommentPrefix);
 		arguments.setAppendHusonUserName(appendHusonUserName);
 		arguments.setHudsonUserName(Jenkins.getAuthentication().getName());
@@ -436,4 +426,11 @@ public class M2ReleaseAction implements PermalinkProjectAction {
 	private static final List<Permalink> PERMALINKS = Collections.singletonList(LastReleasePermalink.INSTANCE);
 
 	private static final Logger LOGGER = Logger.getLogger(M2ReleaseAction.class.getName());
+
+	@Override
+	public M2ReleaseActionDescriptor getDescriptor()
+	{
+		return (M2ReleaseActionDescriptor)Jenkins.get().getDescriptorOrDie(getClass());
+	}
+
 }
